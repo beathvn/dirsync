@@ -21,6 +21,7 @@ import shutil
 import re
 import logging
 import filecmp
+import math
 
 from .options import OPTIONS
 from .version import __pkg_name__
@@ -366,8 +367,7 @@ class Syncer(object):
     def _cmptimestamps(self, filest1, filest2):
         """ Compare time stamps of two files and return True
         if file1 (source) is more recent than file2 (target) """
-
-        mtime_cmp = int((filest1.st_mtime - filest2.st_mtime) * 1000) > 0
+        mtime_cmp = int(math.trunc(filest1.st_mtime*100)/100 - math.trunc(filest2.st_mtime*100)/100) > 0
         if self._use_ctime:
             return mtime_cmp or \
                    int((filest1.st_ctime - filest2.st_mtime) * 1000) > 0
